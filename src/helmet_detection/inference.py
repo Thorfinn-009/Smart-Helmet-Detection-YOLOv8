@@ -55,6 +55,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Display the annotated image in an OpenCV window.",
     )
+    parser.add_argument(
+        "--hide-labels",
+        action="store_true",
+        help="Hide class labels on the annotated image.",
+    )
     return parser
 
 
@@ -89,7 +94,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         parser.error("The model returned no prediction results.")
 
     prediction = predictions[0]
-    annotated_image = prediction.plot()
+    annotated_image = prediction.plot(labels=not args.hide_labels)
     args.output_dir.mkdir(parents=True, exist_ok=True)
     output_path = args.output_dir / f"{args.source.stem}_predictions.jpg"
     if not cv2.imwrite(str(output_path), annotated_image):

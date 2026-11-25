@@ -45,17 +45,28 @@ Roboflow **Helmet Detection v6 balanced dataset**, distributed in YOLOv8 annotat
 
 ## Run image inference locally
 
-Install the dependencies, then pass an image to the inference script:
+From the repository root, create and activate a virtual environment, install
+the dependencies, then run prediction on an image:
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -r requirements.txt
+cp /path/to/your/helmet.jpg media/helmet.jpg
 python src/helmet_detection/inference.py --source media/helmet.jpg --show
 ```
+
+Replace `/path/to/your/helmet.jpg` with the actual path to an image you want to
+test. The `cp` command is optional if you pass the image's existing path
+directly to `--source`. On later runs, activate the environment again with
+`source .venv/bin/activate` before running the inference command.
 
 The script uses `weights/best.pt` by default, reads class labels from the
 checkpoint, and saves an annotated image to
 `runs/inference/helmet_predictions.jpg`. Omit `--show` for headless use. Use
-`--model`, `--output-dir`, `--conf`, and `--imgsz` to override the defaults.
+`--hide-labels` to hide the labels on the image; labels are shown by default.
+Use `--model`, `--output-dir`, `--conf`, and `--imgsz` to override the defaults.
 The trained model detects **With Helmet**, **Without Helmet**, and **licence**
 objects.
 
