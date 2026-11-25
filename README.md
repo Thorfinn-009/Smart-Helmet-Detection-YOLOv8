@@ -17,10 +17,13 @@ Class-specific mAP@0.50: With Helmet **0.779**, Without Helmet **0.711**, licenc
 
 ## Project files
 
-- `notebooks/Helmet_Detection_Milestone_2.ipynb` — Kaggle notebook source, with outputs cleared to keep it easy to review; includes exploration, preprocessing, training, validation, predictions, and ZIP export.
+- `src/helmet_detection/inference.py` — image inference script for the trained YOLO model.
 - `weights/best.pt` — trained baseline weights.
-- `results/` — training graphs, test confusion matrix at 0.25 confidence, sample predictions, and dataset figures.
+- `notebooks/Helmet_Detection_Milestone_2.ipynb` — Kaggle notebook source, with outputs cleared to keep it easy to review; includes exploration, preprocessing, training, validation, predictions, and ZIP export.
+- `results/` — training graphs, test confusion matrix at 0.25 confidence, sample predictions, dataset figures, and training history.
 - `config/data.example.yaml` — portable dataset path template.
+- `media/` — place local input images here (not included in the repository).
+- `runs/inference/` — default destination for annotated inference images.
 - `requirements.txt` — Python dependencies.
 
 ## Dataset and preprocessing
@@ -40,15 +43,21 @@ Roboflow **Helmet Detection v6 balanced dataset**, distributed in YOLOv8 annotat
 
 **Caution:** The notebook is a record of the original experiment, not a fully portable one-click script. Some cells modify the working dataset, and rerunning them with a pre-existing working directory can change outcomes. For a clean reproduction, start in a fresh Kaggle session, verify your dataset source, and run in order. Do not use test results to tune the baseline retrospectively.
 
-## Quick inference example
+## Run image inference locally
 
-```python
-from ultralytics import YOLO
-model = YOLO("weights/best.pt")
-results = model.predict(source="path/to/image.jpg", imgsz=640, conf=0.25)
-for result in results:
-    result.show()
+Install the dependencies, then pass an image to the inference script:
+
+```bash
+pip install -r requirements.txt
+python src/helmet_detection/inference.py --source media/helmet.jpg --show
 ```
+
+The script uses `weights/best.pt` by default, reads class labels from the
+checkpoint, and saves an annotated image to
+`runs/inference/helmet_predictions.jpg`. Omit `--show` for headless use. Use
+`--model`, `--output-dir`, `--conf`, and `--imgsz` to override the defaults.
+The trained model detects **With Helmet**, **Without Helmet**, and **licence**
+objects.
 
 ## Limitations
 
